@@ -1,0 +1,71 @@
+<apex:page id="page" controller="calloutViewer_Controller" >
+	<apex:form id="form" >
+		<apex:sectionHeader title="RESTFUL Callout Viewer" />
+		<apex:pageMessages id="pageMessages" />
+		<apex:pageBlock >
+			<apex:pageBlockButtons >
+				<apex:commandButton value="Callout" action="{!callout}" rendered="{!$CurrentPage.parameters.offline!='1'}"/>
+				<apex:commandButton value="Deserialize" action="{!deserializeQuestions}" rendered="{!$CurrentPage.parameters.offline!='1'}"/>
+
+				<apex:commandButton value="Callout (offline)" action="{!callout}" rendered="{!$CurrentPage.parameters.offline=='1'}" />
+				<apex:commandButton value="Deserialize (offline)" action="{!deserializeQuestions}" rendered="{!$CurrentPage.parameters.offline=='1'}" />
+
+			</apex:pageBlockButtons>
+			<apex:pageBlockSection columns="1" title="HttpRequest" collapsible="false" >
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="setMethod()" />
+					<apex:selectList size="1" value="{!requestMethod}" >
+						<apex:selectOptions value="{!MethodOptions}" />
+					</apex:selectList>
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="setEndpoint()" />
+					<apex:inputText value="{!requestEndpoint}" style="width:90%" />
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection columns="1" title="HttpResponse" collapsible="false" >
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="getStatusCode()" />
+					<apex:outputText value="{!responseStatusCode}" />
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="getStatus()" />
+					<apex:outputText value="{!responseStatus}" />
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="getBody()" />
+					{!responseBody}
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection columns="1" title="JSON Deserializer" rendered="{!deserializedQuestions != null}" collapsible="false" >
+				<apex:pageBlockTable value="{!deserializedQuestions}" var="i" >
+					<apex:column headerValue="Owner" style="width:100px;" >
+						<apex:outputLink value="{!i.owner.link}" target="_blank" style="width:100px;" >
+							<apex:image value="{!i.owner.profile_image}" alt="{!i.owner.display_name}" style="height:30%; width:30%;" /><br/>{!i.owner.display_name}
+						</apex:outputLink>
+					</apex:column>
+					<apex:column headerValue="Question Id" style="width:75px;" >
+						<apex:outputText value="{!i.question_id}" />
+					</apex:column>
+					<apex:column headerValue="Creation Date" style="width:75px;" >
+						<apex:outputText value="{!i.creation_date}" />
+					</apex:column>
+					<apex:column headerValue="View Count" style="width:75px;" >
+						<apex:outputText value="{!i.view_count}" />
+					</apex:column>
+					<apex:column headerValue="Answer Count" style="width:75px;" >
+						<apex:outputText value="{!i.answer_count}" />
+					</apex:column>
+					<apex:column headerValue="Score" style="width:50px;" >
+						<apex:outputText value="{!i.score}" />
+					</apex:column>
+					<apex:column headerValue="Title" >
+						<apex:outputLink value="{!i.link}" target="_blank" ><apex:outputText value="{!i.title}" /></apex:outputLink>
+					</apex:column>
+				</apex:pageBlockTable>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>
